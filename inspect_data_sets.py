@@ -16,20 +16,28 @@ def main(argv=None):
 		argv = sys.argv
 
 	msg = [
-		'Source file read {0}',
-		'UNSD M49 regions written to file {0}',
-		'UNSD M49 sub-regions written to file {0}',
-		'UNSD M49 intermediate regions written to file {0}',
-		'UNSD M49 countries and areas written to file {0}',
-		'UNSD M49 development status written to file {0}',
-		'UNESCO heritage site countries/areas written to file {0}',
-		'UNESCO heritage site categories written to file {0}',
-		'UNESCO heritage site regions written to file {0}',
-		'UNESCO heritage site transboundary values written to file {0}'
+		# 'Source file read {0}',
+		# 'UNSD M49 regions written to file {0}',
+		# 'UNSD M49 sub-regions written to file {0}',
+		# 'UNSD M49 intermediate regions written to file {0}',
+		# 'UNSD M49 countries and areas written to file {0}',
+		# 'UNSD M49 development status written to file {0}',
+		# 'UNESCO heritage site countries/areas written to file {0}',
+		# 'UNESCO heritage site categories written to file {0}',
+		# 'UNESCO heritage site regions written to file {0}',
+		# 'UNESCO heritage site transboundary values written to file {0}'
 	]
 
 	# Setting logging format and default level
 	logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
+
+	# Read in source
+	source_path = os.path.join('input', 'movie_metadata.csv')
+	source_data_frame = read_csv(source_path, ',')
+	source_data_frame_trimmed = trim_columns(source_data_frame)
+	source_trimmed_csv = os.path.join('output', 'movie_metadata_trimmed.csv')
+	write_series_to_csv(source_data_frame_trimmed, source_trimmed_csv, ',', False)
+	logging.info(msg[0].format(os.path.abspath(source_trimmed_csv)))
 
 	# Read in United Nations Statistical Division (UNSD) M49 Standard data set (tabbed separator)
 	unsd_csv = './input/csv/un_area_country_codes-m49.csv'
@@ -128,6 +136,13 @@ def write_series_to_csv(series, path, delimiter=',', row_name=True):
 	"""
 	series.to_csv(path, sep=delimiter, index=row_name)
 
+def trim_columns(data_frame):
+	"""
+	:param data_frame:
+	:return: trimmed data frame
+	"""
+	trim = lambda x: x.strip() if type(x) is str else x
+	return data_frame.applymap(trim)
 
 if __name__ == '__main__':
 	sys.exit(main())
