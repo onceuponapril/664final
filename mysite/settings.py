@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-
+from mysite import secrets
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,7 +37,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'movies.apps.MoviesConfig'
+    'movies.apps.MoviesConfig',
+    # done
+    'test_without_migrations',
+    'social_django',
+    # not-yet
+    # 'api.apps.ApiConfig',
+    # 'corsheaders',
+    # 'crispy_forms',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'rest_auth',
+    # 'rest_auth.registration',
+    # 'rest_framework_swagger',
+
+    # 'django_filters',
+    # 'rest_framework',
+    # 'rest_framework.authtoken', 
+
 ]
 
 MIDDLEWARE = [
@@ -48,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -63,13 +82,32 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',                     # <-- Add
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '731662788200-q396so874gu41pfeos4crd3a4umr0m80.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'N5GdRvFNWGGeIiryNhGYtpUO'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+LOGIN_URL = '/auth/login/google-oauth2/'
+# LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+TEST_RUNNER = 'movies.utils.UnManagedModelTestRunner'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

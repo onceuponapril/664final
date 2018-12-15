@@ -1,0 +1,188 @@
+{% extends 'movies/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<header>
+        <div class="row">
+          <div class="col-sm-10">
+            <h2>{{ movie.title | safe }}</h2>
+          </div>
+
+</header>
+
+{% if movie %}
+
+    {% if movie.director %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Director</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.director }}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.actor.all%}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Actors</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.actor_display}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.keyword.all%}
+
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Keywords</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.keyword_display}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.genre.all%}
+
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Genres</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.genre_display}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.release_year %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Release year</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.release_year }}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.country %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Country</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.country}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.language %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Language</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.language}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.rating %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Rating</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.rating}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.imdb_score %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>IMBD Score</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.imdb_score}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.duration_minutes %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Duration (minutes)</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.duration_minutes}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.num_critics %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Number of critics</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.num_critics}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.facebook_likes %}
+
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Facebook Likes</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.facebook_likes}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.gross %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Gross</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.gross}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.budget %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>Budget</p>
+    </div>
+    <div class="col-sm-10">
+    <p>{{ movie.budget}}</p>
+    </div>
+    </div>
+    {% endif %}
+
+    {% if movie.imdb_link %}
+    <div class="row">
+    <div class="col-sm-2">
+    <p>IMDB Link</p>
+    </div>
+    <div class="col-sm-10">
+    <a href="{{movie.imdb_link}}">Go to IMDB</a>
+    </div>
+    </div>
+    {% endif %}
+
+ {% endif %}
+
+ {% else %}
+ <a href="{% url 'login' %}">Log in</a>
+{% endif %}
+{% endblock content %}

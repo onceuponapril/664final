@@ -1,0 +1,33 @@
+{% extends 'movies/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<header>
+        <div class="row">
+          <div class="col-sm-11">
+            <h2>IMDB Movies</h2>
+          </div>
+
+
+{% include '../pagination.html' %} 
+
+</header>
+
+{% if movies %}
+<ul>
+{% for movie in movies %}
+
+  <!-- safe filter on for raw HTML stored in database -->
+  <li><a href="{% url 'movie_detail' movie.pk %}">{{ movie.title | safe }}</a></li>
+{% endfor %}
+
+</ul>
+{% else %}
+<p>No movies.</p>
+{% endif %}
+
+<p>page count: {{ movies.count }}</p>
+
+{% else %}
+<a href="{% url 'login' %}">Log in</a>
+{% endif %}
+{% endblock content %}
