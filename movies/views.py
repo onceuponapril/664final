@@ -8,8 +8,8 @@ from django_filters.views import FilterView
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
-from .models import Movie
-# from .forms import ArtworkForm
+from .models import Movie, MovieActor,MovieGenre,MovieKeyword
+from .forms import MovieForm
 # from .filters import ArtworkFilter
 
 # Create your views here.
@@ -47,6 +47,169 @@ class MovieDetailView(generic.DetailView):
 	def get_object(self):
 		movie = super().get_object()
 		return movie
+
+@method_decorator(login_required, name='dispatch')
+class MovieCreateView(generic.View):
+	model = Movie
+	form_class = MovieForm
+	success_message = "Movie created successfully"
+	template_name = 'movies/movie_new.html'
+
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def post(self, request):
+		form = MovieForm(request.POST)
+		if form.is_valid():
+			movie = form.save(commit=False)
+			movie.save()
+			i = 1
+			
+			# if form.cleaned_data['actor'] in form:
+			for actor in form.cleaned_data['actor']:
+
+				MovieActor.objects.create(movie=movie, actor=actor, movie_actor_index=i)
+				i+=1
+			
+			# if form.cleaned_data['genre'] in form_class:
+			for genre in form.cleaned_data['genre']:
+				MovieGenre.objects.create(movie=movie, genre=genre)
+
+			# if form.cleaned_data['keyword'] in form_class:
+			for keyword in form.cleaned_data['keyword']:
+				MovieKeyword.objects.create(movie=movie, keyword=keyword)        
+			
+                
+			return redirect(movie) # shortcut to object's get_absolute_url()
+		
+		return render(request, 'movies/movie_new.html', {'form': form})
+
+	def get(self, request):
+		form = MovieForm()
+		return render(request, 'movies/movie_new.html', {'form': form})
+
+
+@method_decorator(login_required, name='dispatch')
+class MovieUpdateView(generic.UpdateView):
+	model = Movie
+	form_class = MovieForm
+	context_object_name = 'movie'
+	success_message = "Movie updated successfully"
+	template_name = 'movies/movie_update.html'
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def form_valid(self, form):
+		movie = form.save(commit=False)
+		movie.save()
+	
+	# actors update
+		old_ids = MovieActor.objects\
+			.values_list('actor', flat=True)\
+			.filter(movie=movie.movie_id)
+
+			#DELETE
+		for old_id in old_ids:
+
+			MovieActor.objects \
+				.filter(movie=movie.movie_id, actor=old_id) \
+				.delete()
+
+		# New actor list
+		new_actor = form.cleaned_data['actor']
+		new_ids = []
+		# Insert new actor entries        #throw away current set and replace with new set 
+		i = 1
+		for actor in new_actor:
+			new_id = actor.actor_id
+			new_ids.append(new_id)
+
+			MovieActor.objects \
+				.create(movie=movie, actor=actor, movie_actor_index=i)
+			i +=1 
+
+        # genres update
+		old_gids = MovieGenre.objects\
+			.values_list('genre', flat=True)\
+			.filter(movie=movie.movie_id)
+
+			#DELETE
+		for old_gid in old_gids:
+
+			MovieGenre.objects \
+				.filter(movie=movie.movie_id, genre=old_gid) \
+				.delete()
+
+		# New genre list
+		new_genre = form.cleaned_data['genre']
+		new_gids = []
+		# Insert new actor entries        #throw away current set and replace with new set 
+		i = 1
+		for genre in new_genre:
+			new_gid = genre.genre_id
+			new_gids.append(new_gid)
+
+			MovieGenre.objects \
+				.create(movie=movie, genre=genre)
+
+		# New keywords update
+		        # genres update
+		old_kids = MovieKeyword.objects\
+			.values_list('keyword', flat=True)\
+			.filter(movie=movie.movie_id)
+
+			#DELETE
+		for old_kid in old_kids:
+
+			MovieKeyword.objects \
+				.filter(movie=movie.movie_id, keyword=old_kid) \
+				.delete()
+
+
+		new_keyword = form.cleaned_data['keyword']
+		new_kids = []
+		# Insert new actor entries        #throw away current set and replace with new set 
+		for keyword in new_keyword:
+			new_kid = keyword.keyword_id
+			new_kids.append(new_kid)
+
+			MovieKeyword.objects \
+				.create(movie=movie, keyword=keyword)
+
+
+
+		return HttpResponseRedirect(movie.get_absolute_url())
+
+@method_decorator(login_required, name='dispatch')
+class MovieDeleteView(generic.DeleteView):
+	model = Movie
+	success_message = "Movie deleted successfully"
+	success_url = reverse_lazy('movies')
+	context_object_name = 'movie'
+	template_name = 'movies/movie_delete.html'
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def delete(self, request, *args, **kwargs):
+		self.object = self.get_object()
+
+		MovieActor.objects.filter(movie = self.object.movie_id).delete()
+		MovieGenre.objects.filter(movie = self.object.movie_id).delete()
+		MovieKeyword.objects.filter(movie = self.object.movie_id).delete()
+
+		self.object.delete()
+
+		return HttpResponseRedirect(self.get_success_url())		
+
+
+
+
+
+
+
 
 class PaginatedFilterView(generic.View):
 	"""

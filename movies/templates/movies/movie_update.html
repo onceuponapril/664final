@@ -1,0 +1,119 @@
+{% extends 'movies/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <header>
+    <h2>Movie Update</h2>
+  </header>
+
+  <!-- novalidate attribute required to render validation messages -->
+  <form method="post" novalidate>
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-6">
+      {{ form.title|as_crispy_field }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+
+<div class="row">
+    <div class="col-6">
+        {{ form.release_year|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.actor|as_crispy_field }}
+    </div>
+</div>
+    
+<div class="row">
+    <div class="col-6">
+        {{ form.genre|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.keyword|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+<div class="col-6">
+    {{ form.director|as_crispy_field }}
+</div>
+</div>
+<div class="row">
+<div class="col-6">
+    {{ form.country|as_crispy_field }}
+</div>
+</div>
+<div class="row">
+    <div class="col-6">
+    {{ form.language|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+    {{ form.rating|as_crispy_field }}
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-6">
+        {{ form.imdb_score|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.duration_minutes|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+    {{ form.num_critics|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.gross|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.budget|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.facebook_likes|as_crispy_field }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        {{ form.imdb_link|as_crispy_field }}
+    </div>
+</div>
+
+  <button type="submit" class="btn btn-outline-success">Update</button>
+
+  <a class="btn btn-outline-danger"  href="{% url 'movie_detail' movie.pk%}">Cancel</a>
+
+  <!-- Restore missing button -->
+
+</form>
+
+{% endblock content %}

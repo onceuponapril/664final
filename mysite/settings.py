@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     # done
     'test_without_migrations',
     'social_django',
+    'crispy_forms',
+    'easy_select2',
+
     # not-yet
     # 'api.apps.ApiConfig',
     # 'corsheaders',
-    # 'crispy_forms',
     # 'allauth',
     # 'allauth.account',
     # 'allauth.socialaccount',
@@ -162,3 +164,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.urls import reverse
 
 
 class Actor(models.Model):
@@ -123,6 +124,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('movie_detail', kwargs={'pk': self.pk})    
 
     @property
     def actor_display(self):
