@@ -1,0 +1,73 @@
+{% extends 'movies/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<header>
+        <div class="row">
+          <div class="col-sm-11">
+            <h2>Movies</h2>
+          </div>
+          <div class="col-sm-1">
+            {% if user.is_authenticated %}
+            <a class="btn btn-outline-secondary" href="{% url 'movie_new' %}">new</a>
+            {% endif %}
+          </div>
+        </div>
+        {% include '../pagination.html' %}         
+</header>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="px-2 py-2" style="border:1px solid #8E8D8A;">
+        <form action="" method="get">
+          {{ filter.form|crispy }}
+          <!-- add a submit button -->
+          <button type="submit" class="btn btn-outline-dark">filter</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-9">
+      {% for movie in movie_list %}
+        <h4><a href="{% url 'movie_detail' movie.pk %}">{{movie.title}}</a></h4>
+
+        {% if movie.director %}
+        <div class="row">
+            <div class="col-sm-2">
+            <p>Director</p>
+            </div>
+            <div class="col-sm-10">
+            <p>{{ movie.director }}</p>
+            </div>
+        </div>
+        {% endif %}
+        <!-- add the country_area_names and description template tags -->
+
+        {% if movie.actor %}
+        <div class="row">
+        <div class="col-sm-2">
+        <p>Actors</p>
+        </div>
+        <div class="col-sm-10">
+        <p>{{ movie.actor_display}}</p>
+        </div>
+        </div>
+        {% endif %}
+
+        {% if movie.rating %}
+        <div class="row">
+        <div class="col-sm-2">
+        <p>Rating</p>
+        </div>
+        <div class="col-sm-10">
+        <p>{{ movie.rating}}</p>
+        </div>
+        </div>
+        {% endif %}
+
+    {% empty %}
+      Select one or more filters relevant to your search and then click "filter".
+    {% endfor %}
+    </div>
+  </div>
+{% endblock content %}

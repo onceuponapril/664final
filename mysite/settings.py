@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'test_without_migrations',
     'social_django',
     'crispy_forms',
-    'easy_select2',
-
+    'django_filters',
     # not-yet
     # 'api.apps.ApiConfig',
     # 'corsheaders',
@@ -54,9 +53,9 @@ INSTALLED_APPS = [
     # 'rest_auth.registration',
     # 'rest_framework_swagger',
 
-    # 'django_filters',
     # 'rest_framework',
     # 'rest_framework.authtoken', 
+        # 'easy_select2',
 
 ]
 

@@ -90,16 +90,16 @@ class Movie(models.Model):
     title = models.CharField(max_length=500)
     release_year = models.IntegerField(blank=True, null=True)
     director = models.ForeignKey(
-        Director, on_delete=models.PROTECT, blank=True, null=True
+        Director, on_delete=models.CASCADE, blank=True, null=True
     )
     country = models.ForeignKey(
-        Country, on_delete=models.PROTECT, blank=True, null=True
+        Country, on_delete=models.CASCADE, blank=True, null=True
     )
     language = models.ForeignKey(
-        "MovieLanguage", on_delete=models.PROTECT, blank=True, null=True
+        "MovieLanguage", on_delete=models.CASCADE, blank=True, null=True
     )
     rating = models.ForeignKey(
-        "Rating", on_delete=models.PROTECT, blank=True, null=True
+        "Rating", on_delete=models.CASCADE, blank=True, null=True
     )
     imdb_score = models.DecimalField(
         max_digits=3, decimal_places=1, blank=True, null=True

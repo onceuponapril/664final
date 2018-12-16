@@ -1,6 +1,8 @@
 venv
 env
 settings/local.py
+settings/secrets.py
+secrets.py
 /.pydevproject
 /.project
 /.vscode

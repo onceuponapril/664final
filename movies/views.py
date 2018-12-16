@@ -10,7 +10,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from .models import Movie, MovieActor,MovieGenre,MovieKeyword
 from .forms import MovieForm
-# from .filters import ArtworkFilter
+from .filters import MovieFilter
 
 # Create your views here.
 def index(request):
@@ -206,11 +206,6 @@ class MovieDeleteView(generic.DeleteView):
 
 
 
-
-
-
-
-
 class PaginatedFilterView(generic.View):
 	"""
 	Creates a view mixin, which separates out default 'page' keyword and returns the
@@ -225,3 +220,8 @@ class PaginatedFilterView(generic.View):
 				del querystring['page']
 			context['querystring'] = querystring.urlencode()
 		return context
+		
+class MovieFilterView(PaginatedFilterView, FilterView):
+	filterset_class = MovieFilter
+	template_name = 'movies/movie_filter.html'
+	paginate_by = 20
