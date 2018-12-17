@@ -1,5 +1,5 @@
 import django_filters
-from .models import Movie,Genre,Actor,Director,MovieLanguage
+from .models import Movie,Genre,Actor,Director,MovieLanguage,Keyword
 
 
 class MovieFilter(django_filters.FilterSet):
@@ -25,17 +25,23 @@ class MovieFilter(django_filters.FilterSet):
 		queryset = Genre.objects.all().order_by("genre_name"),
 	)
 
+	keyword =django_filters.CharFilter(
+		field_name="keyword__keyword_name",
+		label = 'keyword',
+		lookup_expr='icontains'
+	)
+	director = django_filters.CharFilter(
+		field_name='director__director_name',
+		label='Director',
+		lookup_expr='icontains'
+	)
+
 	actor =	django_filters.ModelMultipleChoiceFilter(
 		field_name="actor",
 		queryset = Actor.objects.all().order_by("actor_name"),
 	)
 	
-	director = django_filters.ModelChoiceFilter(
-		field_name='director',
-		label='Director Name',
-		queryset= Director.objects.all().order_by('director_name'),
-		lookup_expr='exact'
-	)
+
 
 	class Meta:
 		model = Movie

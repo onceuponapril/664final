@@ -1,4 +1,5 @@
 venv
+venv/
 env
 settings/local.py
 settings/secrets.py
@@ -12,7 +13,7 @@ secrets.py
 /.externalToolBuilders/
 media
 csv_files/*.csv
-env
+
 /node_modules
 less.xml
 /.DS_Store

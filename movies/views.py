@@ -155,7 +155,7 @@ class MovieUpdateView(generic.UpdateView):
 				.create(movie=movie, genre=genre)
 
 		# New keywords update
-		        # genres update
+
 		old_kids = MovieKeyword.objects\
 			.values_list('keyword', flat=True)\
 			.filter(movie=movie.movie_id)
