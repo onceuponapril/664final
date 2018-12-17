@@ -1,5 +1,5 @@
 import django_filters
-from .models import Movie,Genre,Actor,Director
+from .models import Movie,Genre,Actor,Director,MovieLanguage
 
 
 class MovieFilter(django_filters.FilterSet):

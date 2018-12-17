@@ -29,4 +29,9 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL},
          name='logout'),
     path('movies/', include('movies.urls')),
-]
+    path('movies/api/rest-auth/', include('rest_auth.urls')),
+    path('movies/api/rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('movies/api/', include('api.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
