@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-from movies.models import Movie
-from api.serializers import MovieSerializer
+from movies.models import Movie, Keyword
+from api.serializers import MovieSerializer,KeywordSerializer
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 
@@ -18,6 +18,23 @@ class SiteViewSet(viewsets.ModelViewSet):
 	def delete(self, request, pk, format=None):
 		movie = self.get_object(pk)
 		self.perform_destroy(self, movie)
+
+		return Response(status=status.HTTP_204_NO_CONTENT)
+
+	def perform_destroy(self, instance):
+		instance.delete()
+
+class KeywordViewSet(viewsets.ModelViewSet):
+	"""
+	This ViewSet provides both 'list' and 'detail' views.
+	"""
+	queryset = Keyword.objects.order_by('keyword_name')
+	serializer_class = KeywordSerializer
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+	def delete(self, request, pk, format=None):
+		keyword = self.get_object(pk)
+		self.perform_destroy(self, keyword)
 
 		return Response(status=status.HTTP_204_NO_CONTENT)
 

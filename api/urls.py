@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import SimpleRouter
 from rest_framework_swagger.views import get_swagger_view
-from api.views import SiteViewSet
+from api.views import SiteViewSet,KeywordViewSet
 
 API_TITLE = 'IMDB MOVIE API'
 API_DESC = 'A web API for creating, modifying and deleting IMDB MOVIE.'
@@ -25,6 +25,9 @@ schema_view = get_schema_view(
 
 router = SimpleRouter()
 router.register(r'movies', SiteViewSet, base_name='movies')
+router.register(r'keywords', KeywordViewSet, base_name='keywords')
+
+
 # urlpatterns = router.urls
 
 # The API URLs are now determined automatically by the router.

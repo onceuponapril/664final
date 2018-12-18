@@ -35,6 +35,15 @@ class KeywordSerializer(serializers.ModelSerializer):
 		model = Keyword
 		fields = ('keyword_id', 'keyword_name')
 
+	def create(self, validated_data): 		
+		new_keyword = Keyword.objects.create(**validated_data)
+		return new_keyword	
+	
+	def update(self, instance, validated_data): 		
+		instance.keyword_name =  validated_data.get('keyword_name', instance.keyword_name)
+		instance.save()
+		return instance	
+
 class RatingSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Rating
@@ -110,46 +119,79 @@ class MovieSerializer(serializers.ModelSerializer):
 		many=False,
 		read_only=True
 	)
+
+	director_id = serializers.PrimaryKeyRelatedField(
+		many=False,
+		write_only=True,
+		queryset=Director.objects.all(),
+		source='director'
+	)
 	
 	country = CountrySerializer(
 		many=False,
 		read_only=True
 	)
 	
+	country_id = serializers.PrimaryKeyRelatedField(
+		many=False,
+		write_only=True,
+		queryset=Country.objects.all(),
+		source='country'
+	)
+	
 	language = LanguageSerializer(
 		many=False,
 		read_only=True
+	)
+	
+	language_id = serializers.PrimaryKeyRelatedField(
+		many=False,
+		write_only=True,
+		queryset=MovieLanguage.objects.all(),
+		source='movie_language'
 	)
 
 	rating = RatingSerializer(
 		many=False,
 		read_only=True
 	)
-
-
-	movie_actor = MovieActorSerializer(
-		source='movie_actor_set', # Note use of _set
-		many=True,
-		read_only=True
+	
+	rating_id = serializers.PrimaryKeyRelatedField(
+		many=False,
+		write_only=True,
+		queryset=Rating.objects.all(),
+		source='rating'
 	)
+
 	actor_id = serializers.PrimaryKeyRelatedField(
 		many=True,
 		write_only=True,
 		queryset= Actor.objects.all(),
 		source='movie_actor'
 	)	
+	actor =ActorSerializer(
+		many=True,
+		read_only=True,
+	)
 
-	# movie_genre = MovieGenreSerializer(
-	# 	# source='movie_genre', # Note use of _set
-	# 	many=True,
-	# 	read_only=True
-	# )
+	genre_id = serializers.PrimaryKeyRelatedField(
+		many=True,
+		write_only=True,
+		queryset= Genre.objects.all(),
+		source='movie_genre'
+	)
+	genre= GenreSerializer (many=True,read_only=True)	
 
-	# movie_keyword = MovieKeywordSerializer(
-	# 	# source='movie_keyword', # Note use of _set
-	# 	many=True,
-	# 	read_only=True
-	# )
+	keyword_id = serializers.PrimaryKeyRelatedField(
+		many=True,
+		write_only=True,
+		queryset= Keyword.objects.all(),
+		source='movie_keyword'
+	)
+
+	keyword = KeywordSerializer(many=True,read_only=True)	
+
+
 
 	class Meta:
 		model = Movie
@@ -165,33 +207,26 @@ class MovieSerializer(serializers.ModelSerializer):
 			'facebook_likes',
 			'imdb_link',
 			'director',
+			'director_id',			
 			'country',
+			'country_id',
 			'language',
+			'language_id',
 			'rating',
-			'movie_actor',
+			'rating_id',
 			'actor_id',
-			
-			# 'movie_genre',
-			# 'movie_keyword'
+			'actor',
+			'genre_id',
+			'genre',
+			'keyword_id',
+			'keyword',
 		)
 
 	def create(self, validated_data):
-		"""
-		This method persists a new HeritageSite instance as well as adds all related
-		countries/areas to the heritage_site_jurisdiction table.  It does so by first
-		removing (validated_data.pop('heritage_site_jurisdiction')) from the validated
-		data before the new HeritageSite instance is saved to the database. It then loops
-		over the heritage_site_jurisdiction array in order to extract each country_area_id
-		element and add entries to junction/associative heritage_site_jurisdiction table.
-		:param validated_data:
-		:return: site
-		"""
-
-		# print(validated_data)
 
 		actors = validated_data.pop('movie_actor')
-		# genres = validated_data.pop('movie_genre')
-		# keywords = validated_data.pop('movie_keyword')
+		genres = validated_data.pop('movie_genre')
+		keywords = validated_data.pop('movie_keyword')
 
 		movie = Movie.objects.create(**validated_data)
 
@@ -204,11 +239,34 @@ class MovieSerializer(serializers.ModelSerializer):
 					movie_actor_index=i					
 				)
 				i +=1
+		
+		if genres is not None:
+			for genre in genres:
+				MovieGenre.objects.create(
+					movie = movie,
+					genre = genre,
+				)	
+		
+		if keywords is not None:
+
+			for keyword in keywords:
+				MovieKeyword.objects.create(
+					movie = movie,
+					keyword = keyword,
+				)		
+			
+
+
+
 		return movie 
 
 	def update(self, instance, validated_data):
 		movie_id = instance.movie_id
 		new_movie_actor = validated_data.pop('movie_actor')
+		new_movie_genre = validated_data.pop('movie_genre')
+		new_movie_keyword = validated_data.pop('movie_keyword')
+
+
 
 		instance.title = validated_data.get(
 			'title',
@@ -246,9 +304,23 @@ class MovieSerializer(serializers.ModelSerializer):
 			'imdb_link',
 			instance.imdb_link
 		)
-		# country,language,rating,imdb_score
-		
-	
+		instance.director = validated_data.get(
+			'director',
+			instance.director
+		)
+		instance.country = validated_data.get(
+			'country',
+			instance.country
+		)
+		instance.language = validated_data.get(
+			'language',
+			instance.language
+		)
+		instance.rating = validated_data.get(
+			'rating',
+			instance.rating
+		)
+
 	# actors update
 
 		old_ids = MovieActor.objects\
@@ -274,5 +346,56 @@ class MovieSerializer(serializers.ModelSerializer):
 			MovieActor.objects \
 				.create(movie_id=movie_id, actor_id=new_id, movie_actor_index=i)
 			i +=1 
+		
+		# genres update
+		old_gids = MovieGenre.objects\
+			.values_list('genre', flat=True)\
+			.filter(movie=movie_id)
+
+		##DELETE
+		for old_gid in old_gids:
+
+			MovieGenre.objects \
+				.filter(movie=movie_id, genre=old_gid) \
+				.delete()
+
+		## New genre list
+		new_gids = []
+		## Insert new genre entries        #throw away current set and replace with new set 
+		i = 1
+		for genre in new_movie_genre:
+			new_gid = genre.genre_id
+			new_gids.append(new_gid)
+
+			MovieGenre.objects \
+				.create(movie_id=movie_id, genre_id=new_gid)
+
+		# New keywords update
+
+		old_kids = MovieKeyword.objects\
+			.values_list('keyword', flat=True)\
+			.filter(movie=movie_id)
+
+		##DELETE
+		for old_kid in old_kids:
+
+			MovieKeyword.objects \
+				.filter(movie=movie_id, keyword=old_kid) \
+				.delete()
+
+
+		new_kids = []
+		for keyword in new_movie_keyword:
+			new_kid = keyword.keyword_id
+			new_kids.append(new_kid)
+
+			MovieKeyword.objects \
+				.create(movie_id=movie_id, keyword_id=new_kid)	
+
+
+
+
+
+
 		instance.save()
 		return instance

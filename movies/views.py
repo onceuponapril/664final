@@ -145,7 +145,7 @@ class MovieUpdateView(generic.UpdateView):
 		# New genre list
 		new_genre = form.cleaned_data['genre']
 		new_gids = []
-		# Insert new actor entries        #throw away current set and replace with new set 
+		# Insert new genre entries        #throw away current set and replace with new set 
 		i = 1
 		for genre in new_genre:
 			new_gid = genre.genre_id
@@ -170,7 +170,6 @@ class MovieUpdateView(generic.UpdateView):
 
 		new_keyword = form.cleaned_data['keyword']
 		new_kids = []
-		# Insert new actor entries        #throw away current set and replace with new set 
 		for keyword in new_keyword:
 			new_kid = keyword.keyword_id
 			new_kids.append(new_kid)
