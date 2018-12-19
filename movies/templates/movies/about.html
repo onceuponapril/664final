@@ -1,7 +1,9 @@
 {% extends 'movies/base.html' %}
 
 {% block content %}
+{% load static %}
 
+<div>
 <h2>About IMDB Movies</h2>
 
 <p>This site use IMDB 
@@ -11,5 +13,7 @@
   <a href="https://www.imdb.com/"
                  alt="IMDb movies">IMDB Movies Site</a> 
 </p>
+<img src="{% static 'img/movies.jpg' %}" alt="movies">
 
+</div>
 {% endblock content %}

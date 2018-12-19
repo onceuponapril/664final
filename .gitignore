@@ -1,9 +1,11 @@
 venv
 venv/
+/venv
 env
 settings/local.py
 settings/secrets.py
 secrets.py
+**/secrets.py
 /.pydevproject
 /.project
 /.vscode
@@ -13,7 +15,6 @@ secrets.py
 /.externalToolBuilders/
 media
 csv_files/*.csv
-
 /node_modules
 less.xml
 /.DS_Store
@@ -27,3 +28,4 @@ hm_env
 *.zip
 *.csv
 .DS_Store
+.vscode

@@ -53,6 +53,9 @@ class Director(models.Model):
 
     def __str__(self):
         return self.director_name
+    
+    def get_absolute_url(self):
+        return reverse('director_detail', kwargs={'pk': self.pk})        
 
 
 class Genre(models.Model):

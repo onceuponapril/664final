@@ -1,5 +1,6 @@
 body {
     background-color: #FFFFFF; /* start here */
+    display:block;
 }
 nav{
   background-color:#FC4445;
@@ -7,9 +8,7 @@ nav{
 footer{
   background-color:#97CAEF;
 }
-/* li{
-  background-color:#3FEEE6;
-} */
+
 /* example: comment out padding */
 .container-fluid {
     background-color: transparent;

@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'p)2i5tgbc7vfry!8uy-h4s32tjd7_v=lv9*#6#eih4*0wj=8)7'
+SECRET_KEY = secrets.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', 
     'test_without_migrations',
     'social_django',
-        # 'easy_select2',
 
 ]
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -101,8 +100,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '731662788200-q396so874gu41pfeos4crd3a4umr0m80.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'N5GdRvFNWGGeIiryNhGYtpUO'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 

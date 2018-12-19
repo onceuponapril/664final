@@ -148,7 +148,7 @@ class MovieSerializer(serializers.ModelSerializer):
 		many=False,
 		write_only=True,
 		queryset=MovieLanguage.objects.all(),
-		source='movie_language'
+		source='language'
 	)
 
 	rating = RatingSerializer(

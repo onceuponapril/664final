@@ -8,8 +8,8 @@ from django_filters.views import FilterView
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
-from .models import Movie, MovieActor,MovieGenre,MovieKeyword
-from .forms import MovieForm
+from .models import Movie, MovieActor,MovieGenre,MovieKeyword,Director
+from .forms import MovieForm,DirectorForm
 from .filters import MovieFilter
 
 # Create your views here.
@@ -34,6 +34,8 @@ class MovieListView(generic.ListView):
 
 	def get_queryset(self):
 		return self.model.objects.all().order_by('title')
+
+
 
 @method_decorator(login_required, name='dispatch')
 class MovieDetailView(generic.DetailView):
@@ -224,3 +226,90 @@ class MovieFilterView(PaginatedFilterView, FilterView):
 	filterset_class = MovieFilter
 	template_name = 'movies/movie_filter.html'
 	paginate_by = 20
+
+
+@method_decorator(login_required, name='dispatch')
+class DirectorListlView(generic.ListView):
+	model = Director
+	context_object_name = 'directors'
+	template_name = "movies/director.html"
+	paginate_by = 20
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def get_queryset(self):
+		return self.model.objects.all().order_by('director_name')
+
+@method_decorator(login_required, name='dispatch')
+class DirectorDetailView(generic.DetailView):
+	model = Director
+	context_object_name = 'director'
+	template_name = "movies/director_detail.html"
+
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def get_object(self):
+		director = super().get_object()
+		return director
+
+@method_decorator(login_required, name='dispatch')
+class DirectorCreateView(generic.View):
+	model = Director
+	form_class = DirectorForm
+	success_message = "Movie created successfully"
+	template_name = 'movies/director_new.html'
+
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def post(self, request):
+		form = DirectorForm(request.POST)
+		if form.is_valid():
+			director = form.save(commit=False)
+			director.save()
+                
+			return redirect(director) # shortcut to object's get_absolute_url()
+		
+		return render(request, 'movies/director_new.html', {'form': form})
+
+	def get(self, request):
+		form = DirectorForm()
+		return render(request, 'movies/director_new.html', {'form': form})
+
+@method_decorator(login_required, name='dispatch')
+class DirectorUpdateView(generic.UpdateView):
+	model = Director
+	form_class = DirectorForm
+	context_object_name = 'director'
+	success_message = "Director updated successfully"
+	template_name = 'movies/director_update.html'
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def form_valid(self, form):
+		director = form.save(commit=False)
+		director.save()
+		
+		return HttpResponseRedirect(director.get_absolute_url())
+
+@method_decorator(login_required, name='dispatch')
+class DirectorDeleteView(generic.DeleteView):
+	model = Director
+	success_message = "Director deleted successfully"
+	success_url = reverse_lazy('director')
+	context_object_name = 'director'
+	template_name = 'movies/director_delete.html'
+
+	def dispatch(self, *args, **kwargs):
+		return super().dispatch(*args, **kwargs)
+
+	def delete(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		self.object.delete()
+
+		return HttpResponseRedirect(self.get_success_url())	

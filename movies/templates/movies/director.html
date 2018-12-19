@@ -4,28 +4,31 @@
 <header>
         <div class="row">
           <div class="col-sm-11">
-            <h2>IMDB Movies</h2>
+            <h2>Directors</h2>
           </div>
 
       <div class="col-sm-1">
           {% if user.is_authenticated %}
-            <a class="btn btn-outline-secondary" href="{% url 'movie_new' %}">new</a>
+            <a class="btn btn-outline-secondary" href="{% url 'director_new' %}">new</a>
           {% endif %}
       </div>
       
+
 </header>
 
-{% if movies %}
-<ul class="list-group list-group-flush">
-{% for movie in movies %}
-  <li class="list-group-item"><a href="{% url 'movie_detail' movie.pk %}">{{ movie.title | safe }}</a></li>
+{% if directors %}
+<ul class="list-group">
+{% for director in directors %}
+
+  <li class="list-group-item"><a href="{% url 'director_detail' director.pk %}">{{ director.director_name | safe }}</a></li>
 {% endfor %}
+
 </ul>
 {% else %}
-<p>No movies.</p>
+<p>No Directors.</p>
 {% endif %}
 
-<p>page count: {{ movies.count }}</p>
+<p>page count: {{ directors.count }}</p>
 {% include '../pagination.html' %} 
 
 {% else %}
