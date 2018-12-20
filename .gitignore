@@ -5,6 +5,7 @@ env
 settings/local.py
 settings/secrets.py
 secrets.py
+/secrets.py
 **/secrets.py
 /.pydevproject
 /.project
