@@ -1,5 +1,5 @@
 
-# Final Project: Movie recommendation 
+# Django Project: Movie recommendation 
 
 ## Purpose
 This app is to show the list of movies for users and can filter and search the one they want. 
